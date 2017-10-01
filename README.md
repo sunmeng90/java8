@@ -1,5 +1,140 @@
-** Java 8 习惯用语 https://www.ibm.com/developerworks/cn/java/j-java8idioms1/index.html?ca=drs- **
+Timer & TimerTask
+Timer is a facility for threads to schedule tasks for future execution in a background thread. Tasks may be scheduled for one-time execution, or for repeated execution at regular intervals. Corresponding to each Timer object is a single background thread that is used to execute all of the timer's tasks, sequentially. Timer tasks should complete quickly. If a timer task takes excessive time to complete, it "hogs" the timer's task execution thread. After the last live reference to a Timer object goes away and all outstanding tasks have completed execution, the timer's task execution thread terminates gracefully (and becomes subject to garbage collection).This class is thread-safe: multiple threads can share a single Timer object without the need for external synchronization.
+TimerTask is a task that can be scheduled for one-time or repeated execution by a Timer. 
 
+example:
+```java
+       //run a task once
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Run task 3 seconds after application startup");
+            }
+        }, 3 * 1000);
+
+        //run a task at the specific time
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Run a task at the specific time");
+            }
+        }, new Date());
+
+        //Run a task repeatedly at a fixed delay after a fixed duration
+        //each execution is scheduled relative to the actual execution time of the previous execution. If an execution is delayed for any reason (such as garbage collection or other background activity), subsequent executions will be delayed as well
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                    System.out.println("Run a task every 1 seconds after 5 seconds delay");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 5*1000, 1000);
+
+        //Run a task repeatedly at a fixed delay after a fixed duration
+        //each execution is scheduled relative to the scheduled execution time of the initial execution. If an execution is delayed for any reason (such as garbage collection or other background activity), two or more executions will occur in rapid succession to "catch up."
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                    System.out.println("Run a task every 1 seconds after 10 seconds delay at fixed rate");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        },10*1000, 1);
+
+```
+
+
+** Java 8 习惯用语 https://www.ibm.com/developerworks/cn/java/j-java8idioms1/index.html?ca=drs- **
+###Singleton implementation & Double checking
+
+#Concurrent
+##BlockingQueue
+BlockingQueue is a thread safe queue that supports operations that wait for queue to be non-empty when retrieving an element, and wait for space to become available when storing an element. Blockingqueue implementations are designed primarily for producer-consumer queues.
+
+Example: Classical producer-consumer usage: Producer and Consumer that share a blocking queue for putting and retrieving elements for queue. 
+```java
+
+/**
+ * Created by meng_ on 7/1/2017.
+ */
+public class BlockingQueueBasic {
+
+    public static void main(String[] args) {
+        BlockingQueue<String> queue = new ArrayBlockingQueue<String>(10);
+
+        Producer producer1 = new Producer(queue);
+        Producer producer2 = new Producer(queue);
+        Producer producer3 = new Producer(queue);
+        Consumer consumer = new Consumer(queue);
+        new Thread(producer1).start();
+        new Thread(producer2).start();
+        new Thread(producer3).start();
+
+        new Thread(consumer).start();
+    }
+
+
+}
+
+class Producer implements Runnable {
+    private BlockingQueue<String> queue;
+
+    private static AtomicInteger count = new AtomicInteger(0);
+
+    public Producer(BlockingQueue<String> queue) {
+        this.queue = queue;
+    }
+
+    @Override
+    public void run() {
+        int i = 0;
+        while (true) {
+            try {
+                String item = Thread.currentThread().getName() + " => " + (count.incrementAndGet());
+                queue.put(item);
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+}
+
+
+class Consumer implements Runnable {
+    private BlockingQueue<String> queue;
+
+    public Consumer(BlockingQueue<String> queue) {
+        this.queue = queue;
+    }
+
+    @Override
+    public void run() {
+        int i = 0;
+        while (true) {
+            try {
+                String item = queue.poll();
+                System.out.println(queue);
+                Thread.sleep(200);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+```
 
 #JMX
 ##JMX   overview
@@ -96,7 +231,7 @@ public class CacheAgent {
         //Crate platform MBeanServer
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         //create name for MBeans
-        ObjectName oname = new ObjectName("org.sam.java.jmx:type=Cache,name=CacheManagement");
+        ObjectName oname = new ObjectName(meng");
         Cache mbean = new Cache();
         //Register MBeans in MBeanServer
         mbs.registerMBean(mbean, oname);
@@ -154,6 +289,7 @@ What will be returned when  `this` is used in lambda:
 [Java Language Specification](http://docs.oracle.com/javase/specs/jls/se8/html/jls-15.html#jls-15.27.2)
  
 [Lambda-QuickStart](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/Lambda-QuickStart/index.html)
+
 
 ###funciontal interface
 How does lambda expressions fit into Javas type system? Each lambda corresponds to a given type, specified by an interface. A so called functional interface must contain exactly one abstract method declaration. Each lambda expression of that type will be matched to this abstract method. Since default methods are not abstract you're free to add default methods to your functional interface.
