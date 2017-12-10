@@ -26,10 +26,10 @@ public class FooTestServiceTest {
 		Foo foo = new Foo();
 		foo.setId(1);
 		foo.setName("Mockito");
-		when(fooDao.insertEmp(foo)).thenReturn(1);
-		int id = fooDao.insertEmp(foo);
+		when(fooDao.insertFoo(foo)).thenReturn(1);
+		int id = fooDao.insertFoo(foo);
 		assertEquals(1, id);
-		verify(fooDao).insertEmp(foo);
+		verify(fooDao).insertFoo(foo);
 	}
 	
 	@Test
@@ -39,7 +39,7 @@ public class FooTestServiceTest {
 		fooModified.setName("Mockito_M");
 		
 		//when(fooDao.updateEmp(fooModified)).thenReturn(1);
-		when(fooDao.updateEmp(argThat(new ArgumentMatcher<Foo>() {
+		when(fooDao.updateFoo(argThat(new ArgumentMatcher<Foo>() {
 
 			@Override
 			public boolean matches(Object argument) {
@@ -48,9 +48,9 @@ public class FooTestServiceTest {
 			}
 			
 		}))).thenReturn(1);
-		int id = fooTestService.updateEmp(fooModified);
+		int id = fooTestService.updateFoo(fooModified);
 		assertEquals(1, id);
-		verify(fooDao, times(1)).updateEmp(argThat(new ArgumentMatcher<Foo>() {
+		verify(fooDao, times(1)).updateFoo(argThat(new ArgumentMatcher<Foo>() {
 
 			@Override
 			public boolean matches(Object argument) {
