@@ -51,6 +51,12 @@ example:
 
 ```
 
+WebService
+Jdk implementation
+
+
+
+
 
 ** Java 8 习惯用语 https://www.ibm.com/developerworks/cn/java/j-java8idioms1/index.html?ca=drs- **
 ###Singleton implementation & Double checking
@@ -389,3 +395,40 @@ http://blog.takipi.com/15-must-read-java-8-tutorials/
 http://winterbe.com/posts/2014/03/16/java-8-tutorial/
 
 https://my.oschina.net/benhaile/blog/175012
+
+
+
+##Concurrent
+A Future represents the result of an asynchronous computation and provides a way to check if the computation is complete, to wait for its completion, and to retrieve the result of the computation. 
+While CompleteFuture is an extension for Future, which supports CompletionStage with dependent functions and actions that trigger upon its completion.
+
+The real benefit of CompletableFuture is that it allows you to coordinate activities without writing nested callbacks.
+
+For instance, you want to trigger an action on the completion of a future. CompleteFuture makes it easy to chain Future together.
+```java
+    /**
+    Introduce an artificial delay
+    Apply a function when previous stage is finished
+    Apply a consumer when previous stage is finished
+    Retrieve the finished result 
+    */
+    private String sleepThenReturnString() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ignored) {
+        }
+        return "42";
+    }
+    
+    //.....
+    
+    CompletableFuture.supplyAsync(() -> this::sleepThenReturnString)
+        .thenApply(Integer::parseInt)
+        .thenApply(x -> 2 * x)
+        .thenAccept(System.out::println)
+        .join();
+    System.out.println("Running...");
+
+```
+
+  
