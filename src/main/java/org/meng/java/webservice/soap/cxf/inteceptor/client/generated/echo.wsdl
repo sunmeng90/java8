@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://server.inteceptor.cxf.soap.webservice.java.meng.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="EchoServerService" targetNamespace="http://server.inteceptor.cxf.soap.webservice.java.meng.org/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://server.inteceptor.cxf.soap.webservice.java.meng.org/" elementFormDefault="unqualified" targetNamespace="http://server.inteceptor.cxf.soap.webservice.java.meng.org/" version="1.0">
+
+  <xs:element name="echo" type="tns:echo"/>
+
+  <xs:element name="echoResponse" type="tns:echoResponse"/>
+
+  <xs:element name="getAllUsers" type="tns:getAllUsers"/>
+
+  <xs:element name="getAllUsersResponse" type="tns:getAllUsersResponse"/>
+
+  <xs:element name="getUsersMap" type="tns:getUsersMap"/>
+
+  <xs:element name="getUsersMapResponse" type="tns:getUsersMapResponse"/>
+
+  <xs:complexType name="getUsersMap">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="getUsersMapResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:stringUser"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="stringUser">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="entries" nillable="true" type="tns:entry"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="entry">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="key" type="xs:int"/>
+      <xs:element minOccurs="0" name="value" type="tns:user"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="user">
+    <xs:sequence>
+      <xs:element name="id" type="xs:int"/>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getAllUsers">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="getAllUsersResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:user"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="echo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="echoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="echoResponse">
+    <wsdl:part element="tns:echoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUsersMap">
+    <wsdl:part element="tns:getUsersMap" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="echo">
+    <wsdl:part element="tns:echo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllUsers">
+    <wsdl:part element="tns:getAllUsers" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUsersMapResponse">
+    <wsdl:part element="tns:getUsersMapResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllUsersResponse">
+    <wsdl:part element="tns:getAllUsersResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="EchoServer">
+    <wsdl:operation name="getUsersMap">
+      <wsdl:input message="tns:getUsersMap" name="getUsersMap">
+    </wsdl:input>
+      <wsdl:output message="tns:getUsersMapResponse" name="getUsersMapResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllUsers">
+      <wsdl:input message="tns:getAllUsers" name="getAllUsers">
+    </wsdl:input>
+      <wsdl:output message="tns:getAllUsersResponse" name="getAllUsersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="echo">
+      <wsdl:input message="tns:echo" name="echo">
+    </wsdl:input>
+      <wsdl:output message="tns:echoResponse" name="echoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="EchoServerServiceSoapBinding" type="tns:EchoServer">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getUsersMap">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getUsersMap">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUsersMapResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllUsers">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAllUsers">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllUsersResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="echo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="echo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="echoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="EchoServerService">
+    <wsdl:port binding="tns:EchoServerServiceSoapBinding" name="EchoServerPort">
+      <soap:address location="http://localhost:8080/echo"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
