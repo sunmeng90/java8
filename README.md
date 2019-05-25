@@ -396,6 +396,20 @@ http://winterbe.com/posts/2014/03/16/java-8-tutorial/
 
 https://my.oschina.net/benhaile/blog/175012
 
+##Thread
+
+###Interrupt
+[Java Concurrent in Practice]()  
+Java **does not** provide any mechanism for safely **forcing a thread to stop** what it is doing.  
+Instead, it provides **interruption**, a **cooperative mechanism** that lets **one thread ask another to stop what it is doing**.  
+The cooperative approach is required because we rarely want a task, thread, or service to stop immediately, since that could leave shared data structures in an inconsistent state. Instead, tasks and services can be coded so that, when requested, they clean up any work currently in progress and then terminate. This provides greater flexibility, since the task code itself is usually better able to assess the cleanup required than is the code requesting cancellation    
+
+_**Calling interrupt does not necessarily stop the target thread from doing what it is doing; it merely delivers the message that interruption has been requested.**_  
+
+The interruption is only a flag that does not actually stop the thread, while thread itself can check the flag status to make a decision once interruption detected. the decision is called **Interruption Policy**  
+
+ 
+
 
 
 ##Concurrent
