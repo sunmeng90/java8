@@ -58,7 +58,7 @@ Jdk implementation
 
 
 
-** Java 8 习惯用语 https://www.ibm.com/developerworks/cn/java/j-java8idioms1/index.html?ca=drs- **
+**Java 8 习惯用语 https://www.ibm.com/developerworks/cn/java/j-java8idioms1/index.html?ca=drs-**
 ###Singleton implementation & Double checking
 
 #Concurrent
