@@ -1,4 +1,4 @@
-Timer & TimerTask
+### Timer & TimerTask
 Timer is a facility for threads to schedule tasks for future execution in a background thread. Tasks may be scheduled for one-time execution, or for repeated execution at regular intervals. Corresponding to each Timer object is a single background thread that is used to execute all of the timer's tasks, sequentially. Timer tasks should complete quickly. If a timer task takes excessive time to complete, it "hogs" the timer's task execution thread. After the last live reference to a Timer object goes away and all outstanding tasks have completed execution, the timer's task execution thread terminates gracefully (and becomes subject to garbage collection).This class is thread-safe: multiple threads can share a single Timer object without the need for external synchronization.
 TimerTask is a task that can be scheduled for one-time or repeated execution by a Timer. 
 
@@ -142,11 +142,11 @@ class Consumer implements Runnable {
 
 ```
 
-#JMX
-##JMX   overview
+# JMX
+## JMX   overview
 The JMX technology provides a simple, standard way of managing resources such as applications, devices, and services. Because the JMX technology is dynamic, you can use it to monitor and manage resources as they are created, installed and implemented. You can also use the JMX technology to monitor and manage the Java Virtual Machine (Java VM).
 
-##Architecture of JMX
+## Architecture of JMX
 The JMX technology can be divided into three levels, as follows:  
 
 * Instrumentation 
@@ -155,13 +155,13 @@ The JMX technology can be divided into three levels, as follows:
 
 To manage resources using the JMX technology, 1)you must first instrument the resources such as applications, services, devices using Java objects known as MBeans. 2)Once a resource has been instrumented by MBeans, it can be managed through a JMX agent. The core component of a JMX agent is the MBean server, a managed object server in which MBeans are registered. To remotely access the JMX agent, you need protocol adaptors and connectors to handle the communication between the manager and JMX agent.
 
-###JMX best practice
+### JMX best practice
 * Take a resouces(application, device, service etc.)
 * Expose the functionality you want to manage through a managed bean(MBean)
 * Register you MBeans with a MBeanServer that is part of a JMX agent
 * Access the MBeans through connectors or portocols adaptors remotely to manage the resource from your management client.
 
-####use case
+#### use case
 Just imagine we have a cache service in our application, we want to manage the cahced entries lifecycle(say clear all cache). now what we need to do is:
 
 Define an MBean with functionality to clear cache
@@ -256,7 +256,7 @@ Access JMX agent through Jconsole/JVisualVM
 # java8
 JDK8 new features
 
-##lambda & functional interface
+## lambda & functional interface
 The biggest and most awaited change that Java 8 brings to us is *lambda*. Lambda allows us to pass functionality as argument to another method, or treat code as data. The syntax of lambda is:
 
     parameter -> expression body
@@ -297,7 +297,7 @@ What will be returned when  `this` is used in lambda:
 [Lambda-QuickStart](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/Lambda-QuickStart/index.html)
 
 
-###funciontal interface
+### funciontal interface
 How does lambda expressions fit into Javas type system? Each lambda corresponds to a given type, specified by an interface. A so called functional interface must contain exactly one abstract method declaration. Each lambda expression of that type will be matched to this abstract method. Since default methods are not abstract you're free to add default methods to your functional interface.
 An interface with a single abstract method. The Java API has many one-method interfaces such as Runnable, Callable, Comparator, ActionListener and others. 
 
@@ -336,7 +336,7 @@ System.out.println(converted);    // 123
 [Java 8 functional interfaces](https://www.oreilly.com/learning/java-8-functional-interfaces)
 
 
-##Method Reference
+## Method Reference
 Method references are shortcuts for calling existing methods via keyword ```::```.
 example of method reference:
 ```java
@@ -345,7 +345,7 @@ example of method reference:
     Class::new 
 ```
 
-##Optional
+## Optional
 
 `Optional` is a container: it can hold a value of some type T or just be null. It provides a lot of useful methods so the explicit null checks have no excuse anymore.
 
@@ -381,7 +381,7 @@ public SystemMessage(String title, String content, Attachment attachment) {
 * Optional is not a silver bullet
 
 
-##Stream
+## Stream
 [java8之lambda表达式（变量作用域）](https://my.oschina.net/fhd/blog/419892)
 [](http://www.cnblogs.com/aoeiuv/p/5911692.html)
 
@@ -396,9 +396,9 @@ http://winterbe.com/posts/2014/03/16/java-8-tutorial/
 
 https://my.oschina.net/benhaile/blog/175012
 
-##Thread
+## Thread
 
-###Interrupt
+### Interrupt
 [Java Concurrent in Practice]()  
 Java **does not** provide any mechanism for safely **forcing a thread to stop** what it is doing.  
 Instead, it provides **interruption**, a **cooperative mechanism** that lets **one thread ask another to stop what it is doing**.  
@@ -412,7 +412,7 @@ The interruption is only a flag that does not actually stop the thread, while th
 
 
 
-##Concurrent
+## Concurrent
 A Future represents the result of an asynchronous computation and provides a way to check if the computation is complete, to wait for its completion, and to retrieve the result of the computation. 
 While CompleteFuture is an extension for Future, which supports CompletionStage with dependent functions and actions that trigger upon its completion.
 
