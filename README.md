@@ -404,10 +404,62 @@ Java **does not** provide any mechanism for safely **forcing a thread to stop** 
 Instead, it provides **interruption**, a **cooperative mechanism** that lets **one thread ask another to stop what it is doing**.  
 The cooperative approach is required because we rarely want a task, thread, or service to stop immediately, since that could leave shared data structures in an inconsistent state. Instead, tasks and services can be coded so that, when requested, they clean up any work currently in progress and then terminate. This provides greater flexibility, since the task code itself is usually better able to assess the cleanup required than is the code requesting cancellation    
 
+#### **cooperative mechanism 1: “cancellation requested” flag** 
+```java
+//Listing 7.1. Using a volatile field to hold cancellation state.
+
+@ThreadSafe
+public class PrimeGenerator implements Runnable {
+    @GuardedBy("this")
+    private final List<BigInteger> primes = new ArrayList<BigInteger>();
+    private volatile boolean cancelled;  //cancellation flag
+
+    public void run() {
+        BigInteger p = BigInteger.ONE;
+        while (!cancelled) {//check cancellation flag
+            p = p.nextProbablePrime();
+            synchronized (this) {
+                primes.add(p);
+            }
+        }
+    }
+
+    public void cancel() {
+        cancelled = true;
+    }
+
+    public synchronized List<BigInteger> get() {
+        return new ArrayList<BigInteger>(primes);
+    }
+}
+
+//client code
+```
+```java
+    //client code that start the task and cancel it after 1 second
+    List<BigInteger> aSecondOfPrimes() throws InterruptedException {
+        PrimeGenerator generator = new PrimeGenerator();
+        new Thread(generator).start();
+        try {
+            SECONDS.sleep(1);
+        } finally {
+            generator.cancel();
+        }
+        return generator.get();
+    }
+
+```
+Cons:
+1. the check on cancellation flag will not happen util the next loop start. So there is a time gap between a cancellation requests and the task stops
+2. A worst case is that when the task is running some blocking step(sleep, io, acquire a lock), the flag will never be checked until thread unblocked.
+
 _**Calling interrupt does not necessarily stop the target thread from doing what it is doing; it merely delivers the message that interruption has been requested.**_  
 
-The interruption is only a flag that does not actually stop the thread, while thread itself can check the flag status to make a decision once interruption detected. the decision is called **Interruption Policy**  
+The interruption is only a flag that does not actually stop the thread, while thread itself can check the flag status to make a decision once interruption detected. the decision is called **Interruption Policy**    
+**Interruption Policy**  
 
+**Cancellation Policy:**
+A task that wants to be cancellable must have a cancellation policy that specifies the “how”, “when”, and “what” of cancellation—how other code can request cancellation, when the task checks whether cancellation has been requested, and what actions the task takes in response to a cancellation request
  
 
 
