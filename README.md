@@ -142,29 +142,77 @@ class Consumer implements Runnable {
 
 ```
 
+# Java NIO
+
+The java NIO refers to Java "New" I/O introduced in JDK 1.4, which is not new anymore, it is called to "Non-blocking" I/O. The main goal of java nio is speed(By using structures closer to the operating systems's way of performing I/O). 
+https://blog.csdn.net/omnispace/article/details/80077769  
+* ByteBuffer is the cornerstone of the new I/O. It's a container for bytes.
+* Channel is like a tunnel where byteBuffer is running on to transfer data.
+* Selector work as a single monitor watching on multiple channels and get notified when any of the channel are ready for data to be processed.
+
+Channel connect to source/target, then:
+
+* channel read from source and put bytes to buffer
+* channel write bytes to target from buffer
+
+## select: selector, selectableChannel, selectionKey
+
+1. **Selector**: manages the information about a set of registered channels and their readiness states.  
+2. **SelectableChannel**: supports readiness selection and can be registered with **Selector** objects, along with an indication of which operations on that channel are of interest for that selector. A SelectableChannel can be registered with multiple selectors.
+3. **SelectionKey**: encapsulates the registration relation between a selectableChannel and a selector. 
+
+### How to use non-blocking socket communication
+
+#### Server socket
+
+1. open a new ServerSocketChannel
+2. set the channel as non-blocking
+3. bind the socket to an address
+4. Create a new Selector
+5. Register the ServerSocketChannel with the selector for ACCEPT operation
+6. loop:  
+    a) Check if there are any channels are ready for I/O operations.  
+    b) Get the selected keys  
+    c) Check what kind of opration is ready from the selected key  
+    d) process the I/O(it can be read/write, or open a new SocketChannel and register it with the selector upon accept)  
+    e) remove the selected key that are processed  
+
+#### Client
+
+1. open a new socket channel and connect with an address
+2. configure the channel as non-blocking mode
+3. prepare data to send: allocate a buffer and put data in buffer
+4. write data in buffer to the socket channel
+
 # JMX
+
 ## JMX   overview
+
 The JMX technology provides a simple, standard way of managing resources such as applications, devices, and services. Because the JMX technology is dynamic, you can use it to monitor and manage resources as they are created, installed and implemented. You can also use the JMX technology to monitor and manage the Java Virtual Machine (Java VM).
 
 ## Architecture of JMX
+
 The JMX technology can be divided into three levels, as follows:  
 
-* Instrumentation 
-* JMX agent 
+* Instrumentation
+* JMX agent
 * Remote management 
 
 To manage resources using the JMX technology, 1)you must first instrument the resources such as applications, services, devices using Java objects known as MBeans. 2)Once a resource has been instrumented by MBeans, it can be managed through a JMX agent. The core component of a JMX agent is the MBean server, a managed object server in which MBeans are registered. To remotely access the JMX agent, you need protocol adaptors and connectors to handle the communication between the manager and JMX agent.
 
 ### JMX best practice
+
 * Take a resouces(application, device, service etc.)
 * Expose the functionality you want to manage through a managed bean(MBean)
 * Register you MBeans with a MBeanServer that is part of a JMX agent
 * Access the MBeans through connectors or portocols adaptors remotely to manage the resource from your management client.
 
 #### use case
+
 Just imagine we have a cache service in our application, we want to manage the cahced entries lifecycle(say clear all cache). now what we need to do is:
 
 Define an MBean with functionality to clear cache
+
 ```java
 public interface CacheMBean {
     /**
@@ -184,6 +232,7 @@ public interface CacheMBean {
 ```
 
 Implementation
+
 ```java
 
 public class Cache implements CacheMBean {
@@ -247,6 +296,7 @@ public class CacheAgent {
 }
 
 ```
+
 Access JMX agent through Jconsole/JVisualVM  
 
 * Connect to the java process and open MBeans tab, drill down to the package and open CacheManagement MBean  
@@ -254,9 +304,11 @@ Access JMX agent through Jconsole/JVisualVM
 * When finsihed then check the isEmpty property in Attributes tab  
 
 # java8
+
 JDK8 new features
 
 ## lambda & functional interface
+
 The biggest and most awaited change that Java 8 brings to us is *lambda*. Lambda allows us to pass functionality as argument to another method, or treat code as data. The syntax of lambda is:
 
     parameter -> expression body
@@ -298,6 +350,7 @@ What will be returned when  `this` is used in lambda:
 
 
 ### funciontal interface
+
 How does lambda expressions fit into Javas type system? Each lambda corresponds to a given type, specified by an interface. A so called functional interface must contain exactly one abstract method declaration. Each lambda expression of that type will be matched to this abstract method. Since default methods are not abstract you're free to add default methods to your functional interface.
 An interface with a single abstract method. The Java API has many one-method interfaces such as Runnable, Callable, Comparator, ActionListener and others. 
 
@@ -337,8 +390,10 @@ System.out.println(converted);    // 123
 
 
 ## Method Reference
+
 Method references are shortcuts for calling existing methods via keyword ```::```.
 example of method reference:
+
 ```java
     Class::static_method
     instance::method
@@ -399,12 +454,14 @@ https://my.oschina.net/benhaile/blog/175012
 ## Thread
 
 ### Interrupt
+
 [Java Concurrent in Practice]()  
 Java **does not** provide any mechanism for safely **forcing a thread to stop** what it is doing.  
 Instead, it provides **interruption**, a **cooperative mechanism** that lets **one thread ask another to stop what it is doing**.  
 The cooperative approach is required because we rarely want a task, thread, or service to stop immediately, since that could leave shared data structures in an inconsistent state. Instead, tasks and services can be coded so that, when requested, they clean up any work currently in progress and then terminate. This provides greater flexibility, since the task code itself is usually better able to assess the cleanup required than is the code requesting cancellation    
 
 #### **cooperative mechanism 1: “cancellation requested” flag** 
+
 ```java
 //Listing 7.1. Using a volatile field to hold cancellation state.
 
