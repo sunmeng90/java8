@@ -45,7 +45,7 @@ public class ConnectionPool {
                     remaining = future - System.currentTimeMillis();
                 }
                 Connection result = null;
-                if (!pool.isEmpty()) { // if there are available connection in pool, then return it
+                if (!pool.isEmpty()) { // if there are available connection in pool, then return it no matter it is timeout or not
                     result = pool.removeFirst();
                 }
                 return result;
