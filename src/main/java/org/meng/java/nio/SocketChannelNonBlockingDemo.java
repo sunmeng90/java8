@@ -88,13 +88,13 @@ public class SocketChannelNonBlockingDemo {
                 while (iterator.hasNext()) {
                     SelectionKey selectionKey = iterator.next();
                     //check the ready event
-                    if (selectionKey.readyOps() == SelectionKey.OP_ACCEPT) {
+                    if (selectionKey.isAcceptable()) {
                         System.out.println("got new connection at "+ LocalDateTime.now());
                         //process the channel data
                         SocketChannel socketChannel = serverSocketChannel.accept();
                         socketChannel.configureBlocking(false);
                         socketChannel.register(selector, SelectionKey.OP_READ);
-                    } else if (selectionKey.readyOps() == SelectionKey.OP_READ) {
+                    } else if (selectionKey.isReadable()) {
                         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
                         SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
                         CharsetDecoder decoder = Charset.forName("utf-8").newDecoder();
