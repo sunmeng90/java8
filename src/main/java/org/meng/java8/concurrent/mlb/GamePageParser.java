@@ -1,6 +1,5 @@
 package org.meng.java8.concurrent.mlb;
 
-import com.sun.xml.internal.ws.util.CompletedFuture;
 import org.meng.java8.concurrent.mlb.json.BoxScore;
 import org.meng.java8.concurrent.mlb.json.Result;
 

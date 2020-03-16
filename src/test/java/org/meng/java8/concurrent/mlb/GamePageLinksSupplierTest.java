@@ -1,15 +1,17 @@
 package org.meng.java8.concurrent.mlb;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GamePageLinksSupplierTest {
 
     @Test
+    @Disabled
     public void testGetGameLinks() {
         LocalDate year2017 = LocalDate.of(2017, 10, 1);
         GamePageLinksSupplier supplier = new GamePageLinksSupplier(year2017, 2);
@@ -21,6 +23,7 @@ public class GamePageLinksSupplierTest {
 
 
     @Test
+    @Disabled
     public void testGet() {
         LocalDate year2017 = LocalDate.of(2017, 10, 1);
         GamePageLinksSupplier supplier = new GamePageLinksSupplier(year2017, 5);
