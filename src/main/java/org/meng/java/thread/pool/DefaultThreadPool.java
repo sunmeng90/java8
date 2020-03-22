@@ -1,11 +1,16 @@
 package org.meng.java.thread.pool;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.ThreadFactory;
 
+/**
+ * A simple thread pool implementation
+ * @param <Job>
+ */
 public class DefaultThreadPool<Job extends Runnable> implements ThreadPool<Job> {
     private static final int MAX_WORKER_NUMBER = 10;
 
@@ -19,9 +24,10 @@ public class DefaultThreadPool<Job extends Runnable> implements ThreadPool<Job> 
 
     private int workerNum = DEFAULT_WORKER_NUMBER;
 
-    private final AtomicLong threadSeq = new AtomicLong();
+    private volatile ThreadFactory threadFactory;
 
     public DefaultThreadPool() {
+        this.threadFactory = new DefaultWorkerThreadFactory();
         initWorkers(DEFAULT_WORKER_NUMBER);
     }
 
@@ -40,7 +46,7 @@ public class DefaultThreadPool<Job extends Runnable> implements ThreadPool<Job> 
         for (int i = 0; i < workerNum; i++) {
             Worker worker = new Worker();
             this.workers.add(worker);
-            Thread workerThread = new Thread(worker, "DefaultThreadPool-Worker-" + threadSeq.incrementAndGet());
+            Thread workerThread = worker.thread;
             workerThread.start();
         }
     }
@@ -94,6 +100,12 @@ public class DefaultThreadPool<Job extends Runnable> implements ThreadPool<Job> 
 
     class Worker implements Runnable {
 
+        final Thread thread;
+
+        public Worker() {
+            this.thread = getThreadFactory().newThread(this);
+        }
+
         private volatile boolean running = true;
 
         @Override
@@ -103,7 +115,7 @@ public class DefaultThreadPool<Job extends Runnable> implements ThreadPool<Job> 
                 synchronized (jobs) {
                     while (jobs.isEmpty()) {
                         try {
-                            // release the lock and wait, if jobs queue are empty, worker thread will never exit by flag `running`
+                            //release the lock and wait, if jobs queue are empty, worker thread will never exit by flag `running`
                             jobs.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -126,5 +138,13 @@ public class DefaultThreadPool<Job extends Runnable> implements ThreadPool<Job> 
         public void shutdown() {
             this.running = false;
         }
+
+        public void interrupt() {
+            this.thread.interrupt();
+        }
+    }
+
+    private ThreadFactory getThreadFactory() {
+        return this.threadFactory;
     }
 }
