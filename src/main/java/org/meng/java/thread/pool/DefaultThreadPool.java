@@ -103,6 +103,7 @@ public class DefaultThreadPool<Job extends Runnable> implements ThreadPool<Job> 
                 synchronized (jobs) {
                     while (jobs.isEmpty()) {
                         try {
+                            // release the lock and wait, if jobs queue are empty, worker thread will never exit by flag `running`
                             jobs.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
