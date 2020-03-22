@@ -81,6 +81,7 @@ public class SimpleHttpServer {
                     out.println("Content-Type: image/jpeg");
                     out.println("Content-Length: " + arr.length);
                     out.println("");
+                    out.flush(); // this is required, otherwise headers may not write to http
                     socket.getOutputStream().write(arr, 0, arr.length);
                 } else {
                     br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
