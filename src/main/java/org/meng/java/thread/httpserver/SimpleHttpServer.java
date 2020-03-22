@@ -42,7 +42,6 @@ public class SimpleHttpServer {
             SimpleHttpServer.threadPool.execute(new HttpRequestHandler(socket));
         }
         serverSocket.close();
-
     }
 
     static class HttpRequestHandler implements Runnable {
@@ -55,7 +54,7 @@ public class SimpleHttpServer {
         @Override
         public void run() {
             System.out.println("got new request ");
-            String line = null;
+            String line;
             BufferedReader br = null;
             BufferedReader reader = null;
             PrintWriter out = null;
@@ -75,11 +74,13 @@ public class SimpleHttpServer {
                         bos.write(i);
                     }
                     byte[] arr = bos.toByteArray();
-                    System.out.println("Send response length: " + arr.length);
                     out.println("HTTP/1.1 200 OK");
                     out.println("Server: Molly");
                     out.println("Content-Type: image/jpeg");
                     out.println("Content-Length: " + arr.length);
+                    out.println("Accept-Ranges: bytes");
+                    out.println("Content-Transfer-Encoding: binary");
+                    out.println("Connection: keep-alive");
                     out.println("");
                     out.flush(); // this is required, otherwise headers may not write to http
                     socket.getOutputStream().write(arr, 0, arr.length);
@@ -97,6 +98,9 @@ public class SimpleHttpServer {
                 out.flush();
             } catch (Exception e) {
                 System.out.println("Server error: " + e.getMessage());
+                out.println("HTTP/1.1 500");
+                out.println("");
+                out.flush();
                 e.printStackTrace();
             } finally {
                 close(br, in, reader, out, socket);
@@ -122,3 +126,7 @@ public class SimpleHttpServer {
         SimpleHttpServer.start();
     }
 }
+
+//https://www.cnblogs.com/mq0036/p/11187138.html
+//https://www.cr173.com/html/20128_all.html
+//https://blog.csdn.net/qq_30682027/article/details/83021901
